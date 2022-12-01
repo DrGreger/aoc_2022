@@ -1,50 +1,23 @@
-file1 = open('real_data.txt', 'r')
-Lines = file1.readlines()
+def get_lines(file: str):    
+    with open(file, 'r') as f:
+        return f.read().splitlines()
 
-def part_one():
-    high_cal = 0
-    calories = 0
-    i = 0
+def backpacks_as_lists(lines):
+    pack_list = [[]]
+    pack_list.extend([] for x in lines if not x or pack_list[-1].append(int(x)))
+    return pack_list
 
-    for line in Lines:
-        i += 1
-        if line.strip('\n'):
-            calories += int(line.strip('\n'))
+def part_one(file: str):
+    bp_list = backpacks_as_lists(get_lines(file))
+    res = sorted(map(sum, bp_list), reverse=True)[0]
+    print(f'Higest count: {res}')
 
-        else: 
-            if calories > high_cal:
-                high_cal=calories
-                high_i = i
-                
-            calories = 0
-
-    print(f"{high_cal} \n{high_i}")
-
-def part_two():
-    high_cal = [0, 0 , 0]
-    calories = 0
-    i = 0
-
-    for line in Lines:
-        i += 1
-        if line.strip('\n'):
-            calories += int(line.strip('\n'))
-
-        else: 
-            if calories > high_cal[2]:
-                if calories > high_cal[1]:
-                    if calories > high_cal[0]:
-                        high_cal = [calories, high_cal[0], high_cal[1]]
-                    else:
-                        high_cal = [high_cal[0], calories, high_cal[1]]
-                else:
-                    high_cal = [high_cal[0], high_cal[1], calories]
-
-            calories = 0
-
-    print(f"{high_cal} sum: {sum(high_cal)}")
+def part_two(file):
+    bp_list = backpacks_as_lists(get_lines(file))
+    res = sum(sorted(map(sum, bp_list), reverse=True)[:3])
+    print(f'Total count for three highest: {res}')
 
 
 if __name__ ==  "__main__":
-    # part_one()
-    part_two()
+    part_one('real_data.txt')
+    part_two('real_data.txt')
